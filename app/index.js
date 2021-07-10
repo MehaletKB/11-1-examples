@@ -1,20 +1,22 @@
 import http from "http";
+import router from "./router.js";
 
 const PORT = 8080;
 
-// This is an event handler
-// It will only do stuff when we make a request.
-const handleRequest = (req, res) => {
-  console.log("received a req");
-
-  // `end` is hanging up the 'call' ☎️
-  res.end(`<h1>Hello World</h1> <p>Received request from ${req.url}</p>`);
-};
-
-// Create a server
-const server = http.createServer(handleRequest);
-
-// Turn the server on and start listing on port 8080
-server.listen(PORT, () => {
-  console.info(`Server 🏃🏾‍♂️ on port: ${PORT}`);
-});
+http
+  .createServer((req, res) => {
+    res.writeHead(200, { "Content-Type": "text/html" });
+    switch (req.url) {
+      case "/buttons":
+        res.end(router.generateButtons());
+        break;
+      case "/portfolio":
+        res.end(router.generatePortfolio());
+        break;
+      default:
+        res.end("404: Not Found\n");
+    }
+  })
+  .listen(PORT, () => {
+    console.info("🏃🏾‍♂️");
+  });
